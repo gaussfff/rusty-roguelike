@@ -22,7 +22,10 @@ pub fn player_input(
             let mut players = <&mut Point>::query().filter(component::<Player>());
             players.iter_mut(ecs).for_each(|pos| {
                 let destination = *pos + delta;
-                camera.on_player_move(destination);
+                if map.can_enter_tile(destination) {
+                    *pos = destination;
+                    camera.on_player_move(destination);
+                }
             });
         }
     }
