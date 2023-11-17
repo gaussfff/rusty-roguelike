@@ -24,5 +24,5 @@ pub fn spawn_monster(
         }
     };
 
-    ecs.push((Enemy, pos, render));
+    ecs.push((Enemy, pos, render, MovingRandomly));
 }
