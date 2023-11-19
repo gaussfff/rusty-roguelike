@@ -11,7 +11,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
         max: 10
     };
 
-    ecs.push((Player, pos, render, health));
+    ecs.push((Player, pos, render, health, FieldOfView::new(8)));
 }
 
 pub fn spawn_monster(
@@ -29,7 +29,15 @@ pub fn spawn_monster(
         glyph
     };
 
-    //ecs.push((Enemy, pos, render, ChasingPlayer, Health { current: hp, max: hp}, Name(name)));
+    ecs.push((
+        Enemy,
+        pos,
+        render,
+        ChasingPlayer,
+        Health { current: hp, max: hp},
+        Name(name),
+        FieldOfView::new(6)
+    ));
 }
 
 pub fn spawn_amulet_of_yala(ecs: &mut World, pos: Point) {
