@@ -9,6 +9,10 @@ pub struct MapBuilder {
     pub amulet_start: Point
 }
 
+trait MapArchitect {
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+}
+
 impl MapBuilder {
     fn fill(&mut self, tile: TileType) {
         self.map.tiles.iter_mut().for_each(|t| *t = tile);
