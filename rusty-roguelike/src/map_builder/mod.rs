@@ -1,3 +1,5 @@
+mod empty;
+
 use crate::prelude::*;
 
 const NUM_ROOMS: usize = 20;
