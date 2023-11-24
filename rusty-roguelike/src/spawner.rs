@@ -11,7 +11,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
         max: 10
     };
 
-    ecs.push((Player, pos, render, health, FieldOfView::new(8)));
+    ecs.push((Player{ map_level: 0 }, pos, render, health, FieldOfView::new(8)));
 }
 
 pub fn spawn_monster(
