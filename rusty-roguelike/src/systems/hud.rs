@@ -14,11 +14,6 @@ pub fn hud(ecs: &SubWorld) {
         .nth(0)
         .unwrap();
 
-    let player = <(Entity, &Player)>::query()
-        .iter(ecs)
-        .find_map(|(entity, _player)| Some(*entity))
-        .unwrap();
-
     let mut item_query = <(&Item, &Name, &Carried)>::query();
 
     draw_batch.target(2);
