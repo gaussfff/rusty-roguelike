@@ -1,32 +1,32 @@
-mod map;
 mod camera;
 mod components;
+mod map;
+mod map_builder;
 mod spawner;
 mod systems;
 mod turn_state;
-mod map_builder;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
-    pub use legion::*;
-    pub use legion::world::SubWorld;
     pub use legion::systems::CommandBuffer;
+    pub use legion::world::SubWorld;
+    pub use legion::*;
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
-    pub const DISPLAY_WIDTH: i32  = SCREEN_WIDTH / 2;
+    pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
     pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
     pub const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
-    pub use crate::map::*;
-    pub use crate::map_builder::*;
     pub use crate::camera::*;
     pub use crate::components::*;
+    pub use crate::map::*;
+    pub use crate::map_builder::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
 }
 
-use std::collections::HashSet;
 use crate::prelude::*;
+use std::collections::HashSet;
 
 struct State {
     ecs: World,
@@ -67,7 +67,7 @@ impl State {
             resources,
             input_systems: build_input_scheduler(),
             player_systems: build_player_scheduler(),
-            monster_systems: build_monster_scheduler()
+            monster_systems: build_monster_scheduler(),
         }
     }
 
@@ -101,9 +101,24 @@ impl State {
     fn game_over(&mut self, ctx: &mut BTerm) {
         ctx.set_active_console(2);
         ctx.print_color_centered(2, RED, BLACK, "Your quest has ended.");
-        ctx.print_color_centered(4, WHITE, BLACK, "Slain by a monster, your hero's journey has come to a premature end.");
-        ctx.print_color_centered(5, WHITE, BLACK, "The Amulet of Yala remains unclaimed, and your home town is not saved.");
-        ctx.print_color_centered(8, YELLOW, BLACK, "Don't worry, you can always try again with a new hero.");
+        ctx.print_color_centered(
+            4,
+            WHITE,
+            BLACK,
+            "Slain by a monster, your hero's journey has come to a premature end.",
+        );
+        ctx.print_color_centered(
+            5,
+            WHITE,
+            BLACK,
+            "The Amulet of Yala remains unclaimed, and your home town is not saved.",
+        );
+        ctx.print_color_centered(
+            8,
+            YELLOW,
+            BLACK,
+            "Don't worry, you can always try again with a new hero.",
+        );
         ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again.");
 
         if let Some(VirtualKeyCode::Key1) = ctx.key {
@@ -114,8 +129,18 @@ impl State {
     fn victory(&mut self, ctx: &mut BTerm) {
         ctx.set_active_console(2);
         ctx.print_color_centered(2, GREEN, BLACK, "You have won!");
-        ctx.print_color_centered(4, WHITE, BLACK, "You put on the Amulet of Yala and feel its power course through your venis.");
-        ctx.print_color_centered(5, WHITE, BLACK, "Your town is saved, and you can return to your normal life.");
+        ctx.print_color_centered(
+            4,
+            WHITE,
+            BLACK,
+            "You put on the Amulet of Yala and feel its power course through your venis.",
+        );
+        ctx.print_color_centered(
+            5,
+            WHITE,
+            BLACK,
+            "Your town is saved, and you can return to your normal life.",
+        );
         ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again.");
 
         if let Some(VirtualKeyCode::Key1) = ctx.key {
@@ -199,12 +224,18 @@ impl GameState for State {
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
 
         match current_state {
-            TurnState::AwaitingInput => self.input_systems.execute(&mut self.ecs, &mut self.resources),
-            TurnState::PlayerTurn => self.player_systems.execute(&mut self.ecs, &mut self.resources),
-            TurnState::MonsterTurn => self.monster_systems.execute(&mut self.ecs, &mut self.resources),
+            TurnState::AwaitingInput => self
+                .input_systems
+                .execute(&mut self.ecs, &mut self.resources),
+            TurnState::PlayerTurn => self
+                .player_systems
+                .execute(&mut self.ecs, &mut self.resources),
+            TurnState::MonsterTurn => self
+                .monster_systems
+                .execute(&mut self.ecs, &mut self.resources),
             TurnState::GameOver => self.game_over(ctx),
             TurnState::Victory => self.victory(ctx),
-            TurnState::NextLevel => self.advance_level()
+            TurnState::NextLevel => self.advance_level(),
         }
 
         render_draw_buffer(ctx).expect("Render error");
